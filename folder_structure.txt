@@ -1,0 +1,55 @@
+neo4j-reliability-platform/
+│
+├── cmd/
+│   ├── orchestrator/          # Control-plane service
+│   │   └── main.go
+│   ├── insights-agent/        # Data-plane agent (DaemonSet)
+│   │   └── main.go
+│   └── slo-engine/            # SLO evaluator service
+│       └── main.go
+│
+├── pkg/
+│   ├── registry/              # Instance registry client + models
+│   ├── healthchecks/          # Cypher checks, Prometheus checks
+│   ├── orchestrator/          # Dispatch logic, aggregation
+│   ├── neo4j/                 # Neo4j driver wrapper (timeouts, retries)
+│   ├── prometheus/            # Prometheus query client
+│   ├── k8s/                   # Kubernetes API client
+│   ├── slo/                   # SLO calculation logic
+│   ├── rollout/               # Canary validation logic
+│   ├── incident/              # Incident context collector
+│   └── common/                # Logging, config, utils
+│
+├── api/
+│   ├── proto/                 # gRPC definitions
+│   └── http/                  # REST handlers (if needed)
+│
+├── deployments/
+│   ├── orchestrator/          # Kustomize manifests
+│   ├── insights-agent/        # DaemonSet manifests
+│   ├── slo-engine/            # Deployment manifests
+│   └── prometheus/            # Scrape configs
+│
+├── configs/
+│   ├── slo/                   # SLO YAML definitions
+│   ├── healthchecks/          # Check definitions
+│   └── rollout/               # Canary rules
+│
+├── scripts/
+│   ├── local-dev.sh           # Run services locally
+│   ├── build.sh               # Build binaries
+│   └── deploy.sh              # Deploy to cluster
+│
+├── tests/
+│   ├── integration/
+│   └── unit/
+│
+├── .github/
+│   └── workflows/
+│       ├── ci.yml             # Build + test
+│       └── deploy.yml         # CD pipeline
+│
+├── Dockerfile                 # Multi-stage Go build
+├── go.mod
+├── go.sum
+└── README.md
