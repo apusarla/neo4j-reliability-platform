@@ -1,20 +1,23 @@
 package main
 
 import (
-    "log"
-    "net/http"
+	"log"
+	"net/http"
 
-    "github.com/apusarla/neo4j-reliability-platform/pkg/common"
+	"github.com/apusarla/neo4j-reliability-platform/pkg/common"
+	"github.com/apusarla/neo4j-reliability-platform/pkg/insights"
 )
 
 func main() {
-    cfg := common.LoadConfig("insights-agent", "8081")
-    common.InitLogger(cfg.ServiceName)
+	cfg := common.LoadConfig("insights-agent", "8081")
+	common.InitLogger(cfg.ServiceName)
 
-    http.HandleFunc("/healthz", func(w http.ResponseWriter, r *http.Request) {
-        w.Write([]byte("ok"))
-    })
+	mux := http.NewServeMux()
 
-    log.Printf("Starting Insights Agent on :%s", cfg.HTTPPort)
-    log.Fatal(http.ListenAndServe(":"+cfg.HTTPPort, nil))
+	mux.HandleFunc("/healthz", insights.HealthHandler)
+	mux.HandleFunc("/run-health", insights.RunHealthHandler)
+	mux.HandleFunc("/run-diagnosis", insights.RunDiagnosisHandler)
+
+	log.Printf("Insights Agent running on :%s", cfg.HTTPPort)
+	log.Fatal(http.ListenAndServe(":"+cfg.HTTPPort, mux))
 }
